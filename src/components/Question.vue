@@ -10,7 +10,6 @@
               <p>{{ question.createdAt }}</p>
         
         <div class="columns  is-mobile" id="section1">
-          
           <div class="column is-four-fifths is-mobile">
                <table class="table">
                 <thead>
