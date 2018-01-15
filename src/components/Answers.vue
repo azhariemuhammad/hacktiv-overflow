@@ -8,13 +8,16 @@
         </thead>
         <tbody>
             <tr v-for="item in answers">
-              <td>Like</td>
+              <td><a class="button is-success is-outlined">
+                <i class="material-icons">mood</i></a></td>
               <td>
-                dislike
+                <a class="button is-danger is-outlined"><i class="material-icons">sentiment_very_dissatisfied</i></a>
               </td>
               <td></td>
               <td>
                   <h4>{{ item.userId.username }}: </h4>
+                  <a class="button is-danger is-outlined" v-if="canEditAnswer" @click="edit(item)">Edit</a>
+                      <a class="button is-danger is-outlined" v-if="canEditAnswer" @click="">Remove</a>
                   <p> <span v-html="item.answer"></span></p>
               </td>
             </tr>
@@ -44,7 +47,9 @@ export default {
   name: 'Answers',
   data () {
     return {
-      answer: ''
+      answer: '',
+      userId: localStorage.getItem('uidHacktiv'),
+      canEditAnswer: false
     }
   },
   computed: {
@@ -63,9 +68,22 @@ export default {
       }
       this.postAnswer(obj)
       this.answer = ''
+    },
+    edit: function (params) {
+      this.answer = params.answer
+    },
+    answerEdit: function (params) {
+      let uid = this.userId
+      console.log(uid)
+      console.log(params)
+      if (params.userId._id === uid) {
+        this.canEditAnswer = !this.canEditAnswer
+      }
     }
+  },
+  created () {
+    this.answerEdit()
   }
-
 }
 </script>
 

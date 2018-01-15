@@ -81,6 +81,27 @@ const actions = {
         commit('setNewAnswer', data)
       })
       .catch(err => console.log(err))
+  },
+  update ({commit}, payload) {
+    let id = payload.id
+    http.put(`questions/${id}`, {
+      title: payload.title,
+      userId: localStorage.getItem('uidHacktiv'),
+      question: payload.question
+    })
+      .then(({data}) => {
+        console.log(data)
+      })
+      .catch(err => console.log(err))
+  },
+  removeQuestion ({commit}, payload) {
+    let id = payload
+    console.log(payload, 'remove')
+    http.delete(`questions/${id}`)
+      .then(({data}) => {
+        console.log(data)
+      })
+      .catch(err => console.log(err))
   }
 }
 
