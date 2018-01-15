@@ -1,58 +1,96 @@
 const Answer = require('../models/answer-schema')
 
 const createAnswer = (req, res) => {
-  Answer.create({
-    userId: req.body.userId,
-    questionId: req.body.questionId,
-    answer: req.body.answer
-  })
+  Answer.create(req.body)
   .then(answer => {
+    answer.populate('userId')
+    answer.populate('questionId')
+    .execPopulate()
     res.status(200).send(answer)
   })
   .catch(err => {
     console.log(err)
+    res.status(500).send(err)
   })
 }
 
-const getAllAnswers = (req, res) => {
+
+const getAllAnswersBasedOnQue = (req, res) => {
   Answer.find()
-    .where({ questionId: req.params.id})
+  .where({ questionId: req.params.id})
+  .populate('questionId')
   .populate('userId')
   .populate('votes')
+  .exec()
   .then(answers => {
     res.status(200).send(answers)
   })
   .catch(err => {
     console.log(err)
+    res.status(500).send(err)
   })
 }
 
 
 const findOne = (req, res) => {
   Answer.findOne({_id: req.params.id})
+  .populate('questionId')
+  .populate('userId')
+  .populate('votes')
+  .exec()
   .then(answers => {
     res.status(200).send(answers)
   })
   .catch(err => {
     console.log(err)
+    res.status(500).send(err)
   })
 }
 
 
 
-const findById = (req, res) => {
+const findAll = (req, res) => {
   Answer.find()
   .populate('questionId')
+  .populate('userId')
+  .populate('votes')
+  .exec()
   .then(answer => {
     res.status(200).send(answer)
   })
   .catch(err => {
     console.log(err)
+    res.status(500).send(err)
   })
 }
 
-const findByIdAndUpdate = (req, res) => {
-  Answer.findByIdAndUpdate({ _id: req.params.id }, { $addToSet: { votes: req.body.votes } },{new: true})
+
+const editAnswer = (req, res) => {
+  Answer.findByIdAndUpdate({ _id: req.params.id },
+    {
+      userId: req.body.userId,
+      questionId: req.body.questionId,
+      answer: req.body.answer
+    }, { new: true })
+    .populate('questionId')
+    .populate('userId')
+    .populate('votes')
+    .exec()
+    .then(answer => {
+      res.status(200).send(answer)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).send(err)
+    })
+}
+
+
+const votes = (req, res) => {
+  Answer.findByIdAndUpdate({ _id: req.params.id }, { $addToSet: { votes: req.body.userId } },{new: true})
+  .populate('questionId')
+  .populate('userId')
+  .populate('votes')
   .then(answer => {
     res.status(200).send(answer)
   })
@@ -63,13 +101,18 @@ const findByIdAndUpdate = (req, res) => {
 
 const removeElVotesById = (req, res) => {
   Answer.findByIdAndUpdate({_id: req.params.id}, 
-    { $pull: { votes: req.body.votes } }, { new: true }
+    { $pull: { votes: req.body.userId } }, { new: true }
   )
-  .then(res => {
-    console.log(res)
+  .populate('questionId')
+  .populate('userId')
+  .populate('votes')
+  .then(answer => {
+    console.log(answer)
+    res.status(200).send(answer)
   })
   .catch(err => {
     console.log(err)
+    res.status(500).send(err)
   })
 }
 
@@ -80,16 +123,18 @@ const findByIdAndRemove = (req, res) => {
     })
     .catch(err => {
       console.log(err)
+      res.status(500).send(err)
     })
 }
 
 
 module.exports = {
   createAnswer,
-  getAllAnswers,
-  findById,
+  getAllAnswersBasedOnQue,
+  findAll,
+  editAnswer,
   findByIdAndRemove,
-  findByIdAndUpdate,
+  votes,
   removeElVotesById,
   findOne
 }

@@ -34,15 +34,17 @@ router.delete('/questions/:id', questController.findByIdAndRemove)
 
 router.post('/answers', answerController.createAnswer)
 
-router.get('/questions/:id/answers', answerController.getAllAnswers)
+router.get('/questions/:id/answers', answerController.getAllAnswersBasedOnQue)
 
-router.get('/answers', answerController.findById)
+router.get('/answers', answerController.findAll)
 
 router.get('/answers/:id', answerController.findOne)
 
-router.put('/answers/editVotes/:id', answerController.findByIdAndUpdate)
+router.put('/answers/votes/:id', answerController.votes)
 
-router.put('/answers/removeVotes/:id', answerController.removeElVotesById)
+router.put('/answers/edit/:id', answerController.editAnswer)
+
+router.put('/answers/removevotes/:id', answerController.removeElVotesById)
 
 router.delete('/answers/:id', answerController.findByIdAndRemove)
 
