@@ -26,28 +26,129 @@
 
     <div class="container">
       <div class="notification">
-        This container is <strong>centered</strong> on desktop.
+        <table class="table">
+          <thead>
+            <th>votes</th>
+            <th>answer</th>
+            <th>view</th>
+            <th class="question"></th>
+            <th>
+              <a class="button is-danger is-outlined" @click="showModal">Ask Question</a>
+            </th>
+          </thead>
+           <tbody>
+              <tr v-for="item in questions">
+                <td>{{ item.like.length }}</td>
+                <td></td>
+                <td>12</td>
+                <td>
+                  <router-link :to="{ path: `question/${item._id}`}"> {{ item.title }} </router-link>
+                  <br>
+                  <p>Post By: {{ item.userId.username }} || {{ item.createdAt }}</p>
+                </td>
+              </tr>
+           </tbody>
+        </table>
       </div>
     </div>
+        
+        <!-- Modal -->
+      <div>
+      <card-modal :visible="isVisible" :title="title" transition="zoom">
+        <div class="content">
+          <div class="field">
+            <label class="label">Your Question</label>
+            <div class="control">
+              <form action="" @submit.prevent="submitForm">
+                <div class="field">
+                  <label class="label">Title</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="Text input" v-model="Qtitle">
+                  </div>
+                </div>
+                <vue-editor v-model="question"></vue-editor>
+                <div class="submit-question">
+                  <input type="submit" class="button">
+                </div>
+              </form>              
+            </div>
+          </div>
+        </div>
+      </card-modal>
+    </div>
+
   </div>
 </template>
 
 <script>
+import { VueEditor } from 'vue2-editor'
+import { Modal, CardModal } from 'vue-bulma-modal'
+import { mapActions, mapState } from 'vuex'
 export default {
-  name: 'Home'
+  name: 'Home',
+  components: {
+    Modal,
+    CardModal,
+    VueEditor
+  },
+  data () {
+    return {
+      question: '',
+      Qtitle: '',
+      isVisible: false,
+      title: 'Ask Question'
+    }
+  },
+  computed: {
+    ...mapState([
+      'questions'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'getQuestions',
+      'postQuestion'
+    ]),
+    showModal: function () {
+      this.isVisible = !this.isVisible
+    },
+    submitForm: function () {
+      let obj = {
+        question: this.question,
+        title: this.Qtitle,
+        userId: localStorage.getItem('uidHacktiv')
+      }
+      this.postQuestion(obj)
+      this.isVisible = !this.isVisible
+    }
+  },
+  created () {
+    this.getQuestions()
+  }
+
 }
 </script>
 
 <style scoped>
 
+footer.modal-card-foot {
+  display: none !important;
+}
 .hero-body {
   background-image: url('../assets/code.jpeg');
   background-repeat: no-repeat,no-repeat;
   background-size: cover;
   height: 500px;
 }
+.submit-question {
+  margin-top: 10px;
+}
 
 .title {
   color: #ffffff;
+}
+
+.question {
+  width: 100%;
 }
 </style>

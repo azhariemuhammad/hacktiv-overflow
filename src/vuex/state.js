@@ -2,7 +2,9 @@
 const state = {
   username: localStorage.getItem('usernameHacktiv'),
   email: localStorage.getItem('emailHacktiv'),
-  uid: localStorage.getItem('uidHacktiv')
+  questions: [],
+  question: [],
+  answers: []
 }
 
 export default state

@@ -30,6 +30,57 @@ const actions = {
           .catch(err => console.log(err))
       })
       .catch(err => alert(err.message))
+  },
+  getQuestions: ({commit}, payload) => {
+    http.get('/questions')
+      .then(({data}) => {
+        console.log(data, 'data question')
+        commit('setQuestions', data)
+      })
+      .catch(err => console.error(err))
+  },
+  postQuestion: ({commit}, payload) => {
+    console.log('pauload', payload)
+    http.post('/questions', {
+      userId: payload.userId,
+      question: payload.question,
+      title: payload.title
+    })
+      .then(({data}) => {
+        console.log('data post: ', data)
+        commit('setNewQuestion', data)
+      })
+      .catch(err => console.error(err))
+  },
+  getQuestionById ({commit}, payload) {
+    let id = payload
+    http.get('questions/' + id)
+      .then(({ data }) => {
+        console.log(data, '===')
+        commit('setOneQuestion', data)
+      })
+      .catch(err => console.log(err))
+  },
+  getAnswersBasedOnQue ({commit}, payload) {
+    let id = payload
+    http.get(`questions/${id}/answers`)
+      .then(({data}) => {
+        console.log(data, '=======')
+        commit('setAnswers', data)
+      })
+      .catch(err => console.log(err))
+  },
+  postAnswer ({commit}, payload) {
+    http.post('answers', {
+      userId: localStorage.getItem('uidHacktiv'),
+      questionId: payload.queId,
+      answer: payload.answer
+    })
+      .then(({data}) => {
+        console.log(data)
+        commit('setNewAnswer', data)
+      })
+      .catch(err => console.log(err))
   }
 }
 
