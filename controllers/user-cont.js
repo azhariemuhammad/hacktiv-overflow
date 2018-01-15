@@ -3,13 +3,12 @@ let message = ''
 
 const createUser = (req, res) => {
   console.log(req.body)
-  User.create({
+  User.findOrCreate({
     username: req.body.username,
     email: req.body.email
   })
   .then(user => {
-    message = 'Succes Create One Data'
-    res.status(200).send({user: user, msg: message})
+    res.status(200).json(user)
   })
   .catch(err => {
     console.log('err')
@@ -27,9 +26,9 @@ const getAllUsers = (req, res) => {
 }
 
 const findById = (req, res) => {
-  User.find({email: req.params.email})
+  User.find({_id: req.params.id})
   .then(user => {
-    res.status(200).send({user})
+    res.status(200).send(user)
   })
   .catch(err => {
     console.log(err)
@@ -40,7 +39,7 @@ const findByIdAndUpdate = (req, res) => {
   User.findByIdAndUpdate({_id: req.params.id}, {
     username: req.body.username,
     email: req.body.email
-  })
+  }, { new: true })
   .then(user => {
     res.status(200).send(user)
   })

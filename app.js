@@ -10,6 +10,9 @@ mongoose.Promise = global.Promise
 mongoose.connect(`mongodb://wisnu:123@ds159845.mlab.com:59845/mydb_hacktiv8`)
 .then(() => console.log('db connection succesfull to hacktivoverflow'))
 .catch((err) => console.log(err))
+app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 app.get('/', function (req, res) {
   res.send('hello world')
