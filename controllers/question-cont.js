@@ -13,17 +13,19 @@ const createQuest = (req, res) => {
   })
   .catch(err => {
     console.log(err)
+    res.status(500).json(err)
   })
 }
 
 const getAllQuest = (req, res) => {
   Question.find()
-  .populate('userId', 'username')
+  .populate('userId')
   .then(questions => {
     res.status(200).send(questions)
   })
   .catch(err => {
     console.log(err)
+    res.status(500).json(err)
   })
 }
 
@@ -35,6 +37,7 @@ const findById = (req, res) => {
   })
   .catch(err => {
     console.log(err)
+    res.status(500).json(err)
   })
 }
 
@@ -43,7 +46,7 @@ const findByIdAndUpdate = (req, res) => {
     question: req.body.question,
     tag: req.body.tag,
     title: req.body.title
-  })
+  }, {new: true})
     .then(question => {
       res.status(200).send(question)
     })
@@ -54,8 +57,8 @@ const findByIdAndUpdate = (req, res) => {
 
 const like = (req, res) => {
   Question.findByIdAndUpdate({_id: req.params.id}, {
-    $push: {like: req.body.like}
-  })
+    $addToSet: {like: req.body.like}
+  }, {new: true})
   .then(question => {
     res.status(200).send(question)
   })
@@ -68,12 +71,14 @@ const dislike = (req, res) => {
   console.log(req.params.id,'ini req')
   Question.findByIdAndUpdate({_id: req.params.id},
   { $pull: { like: req.body.like }
-  })
-  .then(req => {
+  }, {new: true})
+  .then(question => {
     console.log(res)
+    res.status(200).json(question)
   })
   .catch(err => {
     console.log(err)
+    res.status(500).json(err)
   })
 }
 
@@ -84,6 +89,7 @@ const findByIdAndRemove = (req, res) => {
   })
   .catch(err => {
     console.log(err)
+    res.status(500).json(err)
   })
 }
 

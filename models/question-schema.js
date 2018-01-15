@@ -4,14 +4,14 @@ const Schema = mongoose.Schema
 const QuestionSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'UserHacktiv'
   },
   tag: String,
   title: String,
   question: String,
   like: [{
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'UserHacktiv'
   }],
   createdAt: {
     type: Date,

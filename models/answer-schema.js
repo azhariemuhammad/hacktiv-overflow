@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const AnswerSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'UserHacktiv'
   },
   questionId: {
     type: Schema.Types.ObjectId,
@@ -13,7 +13,7 @@ const AnswerSchema = new Schema({
   answer: String,
   votes: [{
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'UserHacktiv'
   }],
   createdAt: {
     type: Date,
