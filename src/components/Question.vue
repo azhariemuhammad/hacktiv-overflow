@@ -6,7 +6,7 @@
       </div>
       <div class="column is-three-quarters is-mobile">
             <h1> {{ question.title }} </h1>
-              <h4>{{ question.userId.username }}</h4>      
+              <h4>{{ name }}</h4>      
               <p>{{ question.createdAt }}</p>
         
         <div class="columns  is-mobile" id="section1">
@@ -26,11 +26,10 @@
                 <tbody>
                     <tr>
                       <td>
-                        <a class="button is-success is-outlined">
-                          <i class="material-icons">mood</i></a>
+                        <a class="button is-success is-outlined badge" :data-badge="question.like.length" @click="like(question)">
+                        <i class="material-icons">mood</i></a>
                       </td>
                       <td>
-                        <a class="button is-danger is-outlined"><i class="material-icons">sentiment_very_dissatisfied</i></a>
                       </td>
                       <td></td>
                       <td>
@@ -103,6 +102,12 @@ export default {
     ...mapState([
       'question'
     ]),
+    name: function () {
+      let postBy = this.question.userId.username
+      if (postBy) {
+        return postBy
+      }
+    },
     canEdit: function () {
       let uid = this.userId
       console.log(uid)
@@ -117,7 +122,9 @@ export default {
       'getQuestionById',
       'getAnswersBasedOnQue',
       'update',
-      'removeQuestion'
+      'removeQuestion',
+      'likeQuest',
+      'unLikeQuest'
     ]),
     showModal: function () {
       this.isVisibleUpdate = !this.isVisibleUpdate
@@ -135,6 +142,23 @@ export default {
     remove: function () {
       this.removeQuestion(this.question._id)
       this.$router.push('/')
+    },
+    like: function (item) {
+      console.log(item)
+      let obj = {
+        id: item._id,
+        userId: this.userId
+      }
+      let index = item.like.findIndex(x => {
+        return x._id === this.userId
+      })
+      console.log(index)
+      console.log(obj)
+      if (index === -1) {
+        this.likeQuest(obj)
+      } else {
+        this.unLikeQuest(obj)
+      }
     }
   },
   created () {

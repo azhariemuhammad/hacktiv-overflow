@@ -20,6 +20,26 @@ const mutations = {
   },
   setNewAnswer: function (state, payload) {
     state.answers.push(payload)
+  },
+  pushNewUpdateQuest: function (state, payload) {
+    state.question.forEach((element, index) => {
+      if (element._id === payload._id) {
+        state.question.splice(index, 1, payload)
+      }
+    })
+  },
+  pushNewUpdateAns: function (state, payload) {
+    state.answers.forEach((element, index) => {
+      if (element._id === payload._id) {
+        state.answers.splice(index, 1, payload)
+      }
+    })
+  },
+  deletAns: function (state, payload) {
+    let index = state.answers.findIndex(x => {
+      return x._id === payload._id
+    })
+    state.answers.splice(index, 1)
   }
 }
 

@@ -40,11 +40,11 @@ router.get('/answers', answerController.findAll)
 
 router.get('/answers/:id', answerController.findOne)
 
-router.put('/answers/votes/:id', answerController.votes)
+router.put('/answers/:id/votes', answerController.votes)
 
 router.put('/answers/edit/:id', answerController.editAnswer)
 
-router.put('/answers/removevotes/:id', answerController.removeElVotesById)
+router.put('/answers/:id/removevotes', answerController.removeElVotesById)
 
 router.delete('/answers/:id', answerController.findByIdAndRemove)
 

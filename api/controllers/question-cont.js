@@ -9,6 +9,9 @@ const createQuest = (req, res) => {
     title: req.body.title
   })
   .then(question => {
+    question.populate('userId')
+    question.populate('like')
+    .execPopulate()
     res.status(200).send(question)
   })
   .catch(err => {
@@ -32,6 +35,7 @@ const getAllQuest = (req, res) => {
 const findById = (req, res) => {
   Question.findById({_id: req.params.id})
   .populate('userId')
+  .populate('like')
   .then(question => {
     res.status(200).send(question)
   })
@@ -47,6 +51,8 @@ const findByIdAndUpdate = (req, res) => {
     tag: req.body.tag,
     title: req.body.title
   }, {new: true})
+    .populate('userId')
+    .populate('like')
     .then(question => {
       res.status(200).send(question)
     })
@@ -57,8 +63,10 @@ const findByIdAndUpdate = (req, res) => {
 
 const like = (req, res) => {
   Question.findByIdAndUpdate({_id: req.params.id}, {
-    $addToSet: {like: req.body.like}
+    $addToSet: {like: req.body.userId}
   }, {new: true})
+  .populate('userId')
+  .populate('like')
   .then(question => {
     res.status(200).send(question)
   })
@@ -70,8 +78,10 @@ const like = (req, res) => {
 const dislike = (req, res) => {
   console.log(req.params.id,'ini req')
   Question.findByIdAndUpdate({_id: req.params.id},
-  { $pull: { like: req.body.like }
+  { $pull: { like: req.body.userId }
   }, {new: true})
+  .populate('userId')
+  .populate('like')
   .then(question => {
     console.log(res)
     res.status(200).json(question)

@@ -77,7 +77,7 @@ const actions = {
       answer: payload.answer
     })
       .then(({data}) => {
-        console.log(data)
+        console.log(data, 'create answer')
         commit('setNewAnswer', data)
       })
       .catch(err => console.log(err))
@@ -91,6 +91,7 @@ const actions = {
     })
       .then(({data}) => {
         console.log(data)
+        commit('setOneQuestion', data)
       })
       .catch(err => console.log(err))
   },
@@ -100,6 +101,70 @@ const actions = {
     http.delete(`questions/${id}`)
       .then(({data}) => {
         console.log(data)
+      })
+      .catch(err => console.log(err))
+  },
+  removeAns ({commit}, payload) {
+    let id = payload
+    http.delete(`answers/${id}`)
+      .then(({data}) => {
+        console.log(data)
+        commit('deletAns', payload)
+      })
+      .catch(err => console.log(err))
+  },
+  updateAnswer ({commit}, payload) {
+    http.put(`answers/edit/${payload.id}`, {
+      userId: payload.userId,
+      questionId: payload.queId,
+      answer: payload.answer
+    })
+      .then(({data}) => {
+        commit('pushNewUpdateAns', data)
+      })
+      .catch(err => console.log(err))
+  },
+  likeAns ({commit}, payload) {
+    http.put(`answers/${payload.id}/votes`, {
+      userId: payload.userId
+    })
+      .then(({data}) => {
+        console.log(data)
+        commit('pushNewUpdateAns', data)
+        alert('likes')
+      })
+      .catch(err => console.log(err))
+  },
+  unLike ({commit}, payload) {
+    http.put(`answers/${payload.id}/removevotes`, {
+      userId: payload.userId
+    })
+      .then(({data}) => {
+        console.log(data)
+        commit('pushNewUpdateAns', data)
+        alert('unlike')
+      })
+      .catch(err => console.log(err))
+  },
+  likeQuest ({ commit }, payload) {
+    http.put(`questions/${payload.id}/like`, {
+      userId: payload.userId
+    })
+      .then(({ data }) => {
+        console.log(data, '34989023859028590180')
+        commit('setOneQuestion', data)
+        alert('likes')
+      })
+      .catch(err => console.log(err))
+  },
+  unLikeQuest ({ commit }, payload) {
+    http.put(`questions/${payload.id}/dislike`, {
+      userId: payload.userId
+    })
+      .then(({ data }) => {
+        console.log(data)
+        commit('setOneQuestion', data)
+        alert('unlike')
       })
       .catch(err => console.log(err))
   }
