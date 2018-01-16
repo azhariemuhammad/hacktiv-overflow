@@ -31,6 +31,12 @@ const actions = {
       })
       .catch(err => alert(err.message))
   },
+  googleSignOut: ({commit}, payload) => {
+    let vm = commit
+    firebase.auth().signOut().then(function () {
+      vm('removeUser')
+    })
+  },
   getQuestions: ({commit}, payload) => {
     http.get('/questions')
       .then(({data}) => {
@@ -101,6 +107,7 @@ const actions = {
     http.delete(`questions/${id}`)
       .then(({data}) => {
         console.log(data)
+        commit('deleteQuest', data)
       })
       .catch(err => console.log(err))
   },

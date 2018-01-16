@@ -18,8 +18,8 @@
                   <th class="question">
                   </th>
                   <th>
-                    <a class="button is-danger is-outlined">Ask Question</a>
-                      <a class="button is-danger is-outlined" v-if="canEdit" @click="showModal">Edit</a>
+                    <a class="button is-danger is-outlined" @click="showModal(true)">Ask Question</a>
+                      <a class="button is-danger is-outlined" v-if="canEdit" @click="showModal(false)">Edit</a>
                       <a class="button is-danger is-outlined" v-if="canEdit" @click="remove">Remove</a>
                   </th>
                 </thead>
@@ -61,7 +61,7 @@
           <div class="field">
             <label class="label">Your Question</label>
             <div class="control">
-              <form action="" @submit.prevent="submitForm">
+              <form action="" @submit.prevent="submitForm" v-if="wantToAsk === false">
                 <div class="field">
                   <label class="label">Title</label>
                   <div class="control">
@@ -69,6 +69,18 @@
                   </div>
                 </div>
                 <vue-editor v-model="question.question" id="update"></vue-editor>
+                <div class="submit-question">
+                  <input type="submit" class="button">
+                </div>
+              </form>
+              <form action="" @submit.prevent="submitForm" v-if="wantToAsk === true">
+                <div class="field">
+                  <label class="label">Title</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="Text input" v-model="newTitle">
+                  </div>
+                </div>
+                <vue-editor v-model="newQuestion" id="update"></vue-editor>
                 <div class="submit-question">
                   <input type="submit" class="button">
                 </div>
@@ -93,6 +105,9 @@ export default {
   data () {
     return {
       Qtitle: '',
+      newQuestion: '',
+      newTitle: '',
+      wantToAsk: false,
       userId: localStorage.getItem('uidHacktiv'),
       isVisibleUpdate: false,
       title: 'Edit Your Question'
@@ -126,8 +141,14 @@ export default {
       'likeQuest',
       'unLikeQuest'
     ]),
-    showModal: function () {
-      this.isVisibleUpdate = !this.isVisibleUpdate
+    showModal: function (params) {
+      if (params) {
+        this.wantToAsk = params
+        this.isVisibleUpdate = !this.isVisibleUpdate
+      } else {
+        this.wantToAsk = params
+        this.isVisibleUpdate = !this.isVisibleUpdate
+      }
     },
     submitForm: function () {
       let obj = {

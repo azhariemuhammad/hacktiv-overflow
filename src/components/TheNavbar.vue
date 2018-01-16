@@ -2,9 +2,9 @@
   <div>
     <nav class="navbar is-transparent">
       <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
+        <router-link :to="{path: '/'}"><a class="navbar-item">
           <h1>Hacktiv-OverFlow</h1>
-        </a>
+        </a></router-link>
         <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
           <span></span>
           <span></span>
@@ -18,23 +18,27 @@
           <div class="navbar-item">
             <div class="field is-grouped">
               <p class="control">
-                <a class="bd-tw-button button" data-social-network="Twitter" data-social-action="tweet" data-social-target="http://localhost:4000" target="_blank" href="https://twitter.com/intent/tweet?text=Bulma: a modern CSS framework based on Flexbox&amp;hashtags=bulmaio&amp;url=http://localhost:4000&amp;via=jgthms">
-                  <span class="icon">
-                    <i class="fab fa-twitter"></i>
-                  </span>
-                  <span>
-                    Tweet
-                  </span>
-                </a>
               </p>
-              <p class="control">
-                <a class="button is-primary" @click="login">
-                  <span class="icon">
-                    <i class="fas fa-download"></i>
-                  </span>
-                  <span>Login</span>
-                </a>
-              </p>
+              <div v-if="isLogin">
+                <p class="control">
+                  <a class="button is-primary" @click="login">
+                    <span class="icon">
+                      <i class="material-icons">account_circle</i>
+                    </span>
+                    <span>Login</span>
+                  </a>
+                </p>
+              </div>
+              <div v-else>
+                <a class="button is-primary" @click="logOut">
+                    <span class="icon">
+                      <i class="material-icons">account_circle</i>
+                    </span>
+                    <span>Logout</span>
+                  </a>
+                </p>
+              </div>
+              
             </div>
           </div>
         </div>
@@ -55,7 +59,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import { Modal, ImageModal, CardModal } from 'vue-bulma-modal'
 
 export default {
@@ -68,21 +72,44 @@ export default {
   data () {
     return {
       isVisible: false,
-      title: 'Login'
+      title: 'Login',
+      isLogin: false
     }
+  },
+  computed: {
+    ...mapState([
+      'username'
+    ])
   },
   methods: {
     ...mapActions([
-      'googleAuth'
+      'googleAuth',
+      'googleSignOut'
     ]),
+    logOut: function () {
+      this.isLogin = !this.isLogin
+      this.googleSignOut()
+      this.$router.push('/')
+    },
     login: function () {
       this.isVisible = !this.isVisible
     },
     auth: function () {
+      this.isLogin = !this.isLogin
       this.googleAuth()
       this.isVisible = false
+    },
+    cekLogin: function () {
+      let uid = localStorage.getItem('uidHacktiv')
+      if (uid) {
+        this.isLogin = true
+      }
     }
+  },
+  created () {
+    this.cekLogin()
   }
+
 }
 </script>
 

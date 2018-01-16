@@ -29,8 +29,8 @@
         <table class="table">
           <thead>
             <th>votes</th>
-            <th>answer</th>
-            <th>view</th>
+            <th></th>
+            <th></th>
             <th class="question"></th>
             <th>
               <a class="button is-danger is-outlined" @click="showModal">Ask Question</a>
@@ -40,7 +40,7 @@
               <tr v-for="item in questions">
                 <td>{{ item.like.length }}</td>
                 <td></td>
-                <td>12</td>
+                <td></td>
                 <td>
                   <router-link :to="{ path: `question/${item._id}`}"> {{ item.title }} </router-link>
                   <br>
@@ -110,7 +110,11 @@ export default {
       'postQuestion'
     ]),
     showModal: function () {
-      this.isVisible = !this.isVisible
+      if (localStorage.getItem('usernameHacktiv')) {
+        this.isVisible = !this.isVisible
+      } else {
+        alert('Please Login')
+      }
     },
     submitForm: function () {
       let obj = {

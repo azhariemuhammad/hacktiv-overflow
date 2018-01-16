@@ -5,6 +5,11 @@ const mutations = {
     localStorage.setItem('uidHacktiv', payload._id)
     alert('succes login')
   },
+  removeUser: function (state, payload) {
+    localStorage.removeItem('emailHacktiv')
+    localStorage.removeItem('usernameHacktiv')
+    localStorage.removeItem('uidHacktiv')
+  },
   setQuestions: function (state, payload) {
     state.questions = payload
   },
@@ -21,13 +26,6 @@ const mutations = {
   setNewAnswer: function (state, payload) {
     state.answers.push(payload)
   },
-  pushNewUpdateQuest: function (state, payload) {
-    state.question.forEach((element, index) => {
-      if (element._id === payload._id) {
-        state.question.splice(index, 1, payload)
-      }
-    })
-  },
   pushNewUpdateAns: function (state, payload) {
     state.answers.forEach((element, index) => {
       if (element._id === payload._id) {
@@ -40,6 +38,12 @@ const mutations = {
       return x._id === payload._id
     })
     state.answers.splice(index, 1)
+  },
+  deleteQuest: function (state, payload) {
+    let index = state.questions.findIndex(x => {
+      return x._id === payload._id
+    })
+    state.questions.splice(index, 1)
   }
 }
 
