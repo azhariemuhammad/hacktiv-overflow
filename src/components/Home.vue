@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home">
 
     <section class="hero">
       <div class="hero-body">
@@ -150,6 +150,9 @@ footer.modal-card-foot {
 
 .title {
   color: #ffffff;
+}
+.notification a:not(.button) {
+  text-decoration: none;
 }
 
 .question {
