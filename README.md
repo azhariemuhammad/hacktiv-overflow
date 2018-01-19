@@ -3,7 +3,7 @@
 > A Vue.js project
 
 
-[## Live Demo](http://hacktivflow.azhariemuhammad.com/)
+[Live Demo](http://hacktivflow.azhariemuhammad.com/)
 
 ## Build Setup
 
